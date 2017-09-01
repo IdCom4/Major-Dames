@@ -1695,6 +1695,7 @@ $(document).ready(function () {
 		tour = 1;
 		$("#over").addClass("d-none");
 		$("#tour").removeClass("d-none");
+		$("#tour").text("Au joueur 1 !");
 		resetPion();
 		initGrid();
 		resetField();
