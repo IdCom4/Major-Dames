@@ -1382,17 +1382,13 @@ $(document).ready(function () {
 
 	function count_obligation() {
 		var dir = 0;
-		var count = 0;
 		while(dir < 4)
 		{
 			if(obligation[dir] != 0)
-				count++;
+				return (1);
 			dir++;
 		}
-		if(count > 0)
-			return 1;
-		else
-			return 0;
+		return (0);
 	}
 
 	function move_pion(y, x) {
@@ -1636,12 +1632,90 @@ $(document).ready(function () {
 		}
 	}
 
+	function count_movePion() {
+		var dir = 0;
+		 while(dir < 4)
+		 {
+		 	if(movePion[dir][0] != 11)
+		 		return(1);
+		 	dir++;
+		 }
+		 return (0);
+	}
+
+	function no_move() {
+		var y = 0;
+		var x = 0;
+		var countBlanc = 0;
+		var countNoir = 0;
+		while(y < 10)
+		{
+			while(x < 10)
+			{
+				if(tour == 1 && grid[y][x] == 1 || grid[y][x] == 3)
+				{
+					search_poss(x, y);
+					console.log("blanc");
+					console.log(count_obligation());
+					console.log(count_movePion());
+					if(count_obligation() != 0 || count_movePion() != 0)
+						countBlanc++;
+					resetPion();
+				}
+				if(tour == 2 && grid[y][x] == 2 || grid[y][x] == 4)
+				{
+					search_poss(x, y);
+					console.log("noir");
+					console.log(count_obligation());
+					console.log(count_movePion());
+					if(count_obligation() != 0 || count_movePion() != 0)
+						countNoir++;
+					resetPion();
+				}
+				x++;
+			}
+			x = 0;
+			y++;
+		}
+		if((tour == 1 && countBlanc == 0) || (tour == 2 && countNoir == 0))
+			return (1);
+		return(0);
+	}
+
+	function remove_scale() {
+		var y = 0;
+		var x = 0;
+		var id = new String();
+
+		while(y < 10)
+		{
+			while(x < 10)
+			{
+				id += '#';
+				id += putCoord(y, 'y');
+				id += putCoord(x, 'x');
+				$(id + " div").removeClass("scaleP");
+				$(id + " div").removeClass("scaleD");
+				id = new String();
+				x++;
+			}
+			x = 0;
+			y++;
+		}
+	}
+
 	setPion();
 	initGrid();
 
 	$(".case").click(function () {
+		remove_scale();
+		if($("#" + $(this).attr("id") + " div").hasClass("pnoir") || $("#" + $(this).attr("id") + " div").hasClass("pblanc"))
+			$("#" + $(this).attr("id") + " div").addClass("scaleP");
+		else if($("#" + $(this).attr("id") + " div").hasClass("dnoir") || $("#" + $(this).attr("id") + " div").hasClass("dblanc"))
+			$("#" + $(this).attr("id") + " div").addClass("scaleD");
 		var y = getCoord($(this).attr("id"), 'y');
 		var x = getCoord($(this).attr("id"), 'x');
+		var end = 0;
 		// console.log("y = " + y);
 		// console.log("x = " + x);
 		// console.log("id = " + $(this).attr("id"));
@@ -1670,7 +1744,8 @@ $(document).ready(function () {
 					$("#tour").text("Au joueur 1 !");
 					tour = 1;
 				}
-				if(is_over() == 1)
+				end = no_move();
+				if(is_over() == 1 || end == 1)
 					over = 1;
 			}
 			else
@@ -1678,14 +1753,14 @@ $(document).ready(function () {
 		}
 		if(over == 1)
 		{
-			if(tour == 1)
-			{
-				$("#h2").text("Partie terminée ! Victoire du joueur 2 !");
-			}
-			else
-			{
-				$("#h2").text("Partie terminée ! Victoire du joueur 1 !");
-			}
+			if(tour == 1 && end == 0)
+				$("#h2").text("Partie terminée ! Victoire du Joueur 2 !");
+			else if(tour == 2 && end == 0)
+				$("#h2").text("Partie terminée ! Victoire du Joueur 1 !");
+			else if(tour == 1 && end == 1)
+				$("#h2").text("Le Joueur 1 ne peut plus bouger ! Victoire du Joueur 2 !");
+			else if(tour == 2 && end == 1)
+				$("#h2").text("le Joueur 2 ne peut plus bouger ! Victoire du Joueur 1 !");
 			$("#over").removeClass("d-none");
 			$("#tour").addClass("d-none");
 		}
@@ -1695,12 +1770,12 @@ $(document).ready(function () {
 		tour = 1;
 		$("#over").addClass("d-none");
 		$("#tour").removeClass("d-none");
+		$("#tour").text("Au joueur 1 !");
 		resetPion();
 		initGrid();
 		resetField();
 	});
 	$("#again").click(function () {
-		console.log("coucou");
 		over = 0;
 		tour = 1;
 		$("#over").addClass("d-none");

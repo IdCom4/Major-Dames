@@ -78,15 +78,13 @@ h1 {
 	border: solid white 2px !important;
 	border-radius: 20px !important;
 }
-.pnoir:hover, .pblanc:hover {
-	/*transform: translateY(-0.4vw);
-	box-shadow: 0 0.7vw 0.7vw #111111;*/
+.scaleP {
 	transform: scale(1.2);
-	box-shadow: 0 0 1vw 0.5vw #111111;
+	box-shadow: 0 0 1vw 0.3vw #111111;
 }
-.dnoir:hover, .dblanc:hover {
+.scaleD {
 	transform: scale(1.1);
-	box-shadow: 0 0 1vw 0.5vw #111111;
+	box-shadow: 0 0 1vw 0.3vw #111111;
 }
 #play:active, #again:active {
 	transform: scale(0.7);
