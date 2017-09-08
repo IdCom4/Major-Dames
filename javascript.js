@@ -1660,13 +1660,16 @@ $(document).ready(function () {
 		var x = 0;
 		var countBlanc = 0;
 		var countNoir = 0;
+		var count = 0;
 		while(y < 10)
 		{
 			while(x < 10)
 			{
 				if(tour == 1 && (grid[y][x] == 1 || grid[y][x] == 3))
 				{
+					count = 1;
 					search_poss(x, y);
+					check_obligation();
 					console.log("blanc");
 					console.log(count_obligation());
 					console.log(count_movePion());
@@ -1678,7 +1681,9 @@ $(document).ready(function () {
 				}
 				if(tour == 2 && (grid[y][x] == 2 || grid[y][x] == 4))
 				{
+					count = 1;
 					search_poss(x, y);
+					check_obligation();
 					console.log("noir");
 					console.log(count_obligation());
 					console.log(count_movePion());
@@ -1693,6 +1698,8 @@ $(document).ready(function () {
 			x = 0;
 			y++;
 		}
+		if(count == 0)
+			return(0);
 		if((tour == 1 && countBlanc == 0) || (tour == 2 && countNoir == 0))
 			return (1);
 		return(0);
