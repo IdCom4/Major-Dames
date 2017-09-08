@@ -1632,15 +1632,27 @@ $(document).ready(function () {
 		}
 	}
 
-	function count_movePion() {
+	function count_movePion(type) {
 		var dir = 0;
-		 while(dir < 4)
-		 {
-		 	if(movePion[dir][0] != 11)
-		 		return(1);
-		 	dir++;
-		 }
-		 return (0);
+		if(type == 'p')
+		{
+			while(dir < 4)
+			 {
+			 	if(movePion[dir][0] != 11)
+			 		return(1);
+			 	dir++;
+			 }
+		}
+		else if(type == 'd')
+		{
+			while(dir < 4)
+			 {
+			 	if(moveDame[dir][0][0] != 11)
+			 		return(1);
+			 	dir++;
+			 }
+		}	 
+		return (0);			 
 	}
 
 	function no_move() {
@@ -1652,23 +1664,27 @@ $(document).ready(function () {
 		{
 			while(x < 10)
 			{
-				if(tour == 1 && grid[y][x] == 1 || grid[y][x] == 3)
+				if(tour == 1 && (grid[y][x] == 1 || grid[y][x] == 3))
 				{
 					search_poss(x, y);
 					console.log("blanc");
 					console.log(count_obligation());
 					console.log(count_movePion());
-					if(count_obligation() != 0 || count_movePion() != 0)
+					if(grid[y][x] == 1 && (count_obligation() != 0 || count_movePion('p') != 0))
+						countBlanc++;
+					else if(grid[y][x] == 3 && (count_obligation() != 0 || count_movePion('d') != 0))
 						countBlanc++;
 					resetPion();
 				}
-				if(tour == 2 && grid[y][x] == 2 || grid[y][x] == 4)
+				if(tour == 2 && (grid[y][x] == 2 || grid[y][x] == 4))
 				{
 					search_poss(x, y);
 					console.log("noir");
 					console.log(count_obligation());
 					console.log(count_movePion());
-					if(count_obligation() != 0 || count_movePion() != 0)
+					if(grid[y][x] == 2 && (count_obligation() != 0 || count_movePion('p') != 0))
+						countNoir++;
+					else if(grid[y][x] == 4 && (count_obligation() != 0 || count_movePion('d') != 0))
 						countNoir++;
 					resetPion();
 				}
